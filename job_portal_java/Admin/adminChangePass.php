@@ -2,20 +2,30 @@
 if (!isset($_SESSION)) {
   session_start();
 }
+
 define('TITLE', 'Change Password');
 define('PAGE', 'changepass');
 include('./adminInclude/header.php');
 require "../config.php";
 
-$adminEmail = $_SESSION['adminLogEmail'];
+// Initialize $adminEmail to avoid undefined variable warning
+$adminEmail = ''; // Default value
 
+if (isset($_SESSION['is_admin_login'])) {
+  $adminEmail = $_SESSION['adminLogEmail'];
+}
+
+// Check if the form is submitted
 if (isset($_REQUEST['adminPassUpdatebtn'])) {
   if (empty($_REQUEST['adminPass'])) {
     // Display message if required field is missing
     $passmsg = '<div class="alert alert-warning col-sm-6 ml-5 mt-2" role="alert">Fill All Fields</div>';
   } else {
+    // Hash the new password
     $adminPass = sha1($_REQUEST['adminPass']);
+    // Prepare the SQL statement
     $sql = "UPDATE admin SET a_Password = '$adminPass' WHERE a_Email = '$adminEmail'";
+    // Execute the query
     if ($conn->query($sql) === TRUE) {
       // Success message
       $passmsg = '<div class="alert alert-success col-sm-6 ml-5 mt-2" role="alert">Updated Successfully</div>';
@@ -33,7 +43,8 @@ if (isset($_REQUEST['adminPassUpdatebtn'])) {
       <form class="mt-5 mx-5" method="POST" action="">
         <div class="form-group">
           <label for="inputEmail">Email</label>
-          <input type="email" class="form-control" id="inputEmail" value="<?php echo $adminEmail; ?>" readonly>
+          <input type="email" class="form-control" id="inputEmail" value="<?php echo htmlspecialchars($adminEmail); ?>"
+            readonly>
         </div>
         <div class="form-group">
           <label for="inputnewpassword">New Password</label>
@@ -51,6 +62,7 @@ if (isset($_REQUEST['adminPassUpdatebtn'])) {
 
 </div> <!-- div Row close from header -->
 </div> <!-- div Container-fluid close from header -->
+
 <?php
 include('./adminInclude/footer.php');
 ?>

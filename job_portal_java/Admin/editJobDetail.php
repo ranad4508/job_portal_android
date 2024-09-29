@@ -98,15 +98,15 @@ if (isset($_REQUEST['jobUpdateBtn'])) {
   <h3 class="text-center">Update Job Details</h3>
   <?php
   if (isset($_REQUEST['view'])) {
-    $sql = "SELECT * FROM job_details WHERE job_id = {$_REQUEST['id']}";
+    $sql = "SELECT * FROM job_details WHERE detail_id = {$_REQUEST['id']}";
     $result = $conn->query($sql);
     $row = $result->fetch_assoc();
   }
   ?>
   <form action="" method="POST" enctype="multipart/form-data">
     <div class="form-group">
-      <label for="job_id">Job ID</label>
-      <input type="text" class="form-control" id="job_id" name="job_id" value="<?php if (isset($row['job_id'])) {
+      <label for="job_id">Job Detail ID</label>
+      <input type="text" class="form-control" id="job_id" name="job_id" value="<?php if (isset($row['detail_id'])) {
         echo $row['job_id'];
       } ?>" readonly>
     </div>

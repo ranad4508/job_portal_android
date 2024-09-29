@@ -73,7 +73,7 @@ if (isset($_SESSION['is_admin_login'])) {
         echo '<td>' . $row["deadline_date"] . '</td>';
         echo '<td>' . ($row["is_active"] ? 'Active' : 'Inactive') . '</td>';
         echo '<td>
-                <form action="editJobDetails.php" method="POST" class="d-inline">
+                <form action="editJobDetail.php" method="POST" class="d-inline">
                   <input type="hidden" name="id" value=' . $row["detail_id"] . '>
                   <button type="submit" class="btn btn-info mr-3" name="view" value="View"><i class="fas fa-pen"></i></button>
                 </form>

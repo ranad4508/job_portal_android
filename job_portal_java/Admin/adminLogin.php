@@ -3,13 +3,14 @@
 session_start();
 require "../config.php";
 
-// Enable error reporting for debugging
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 // Initialize message variable
 $msg = '';
 
+// Check if the user is already logged in
+if (isset($_SESSION['is_admin_login'])) {
+    header("Location: adminDashboard.php");
+    exit();
+}
 
 if (isset($_POST['login'])) {
     // Fetch and sanitize input
@@ -23,21 +24,32 @@ if (isset($_POST['login'])) {
         // Encrypt password using sha1
         $encryptedPassword = sha1($adminPassword);
 
-        // Query to check if the email and password match
+        // Prepare the SQL query to match with a_Email and encrypted a_Password
         $sql = "SELECT * FROM admin WHERE a_Email = ? AND a_Password = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ss", $adminEmail, $encryptedPassword);
-        $stmt->execute();
-        $result = $stmt->get_result();
 
-        if ($result->num_rows > 0) {
-            // Admin login successful
-            $_SESSION['is_admin_login'] = true;
-            $_SESSION['adminLogEmail'] = $adminEmail;
-            header("Location: adminDashboard.php");
-            exit();
+        // Bind parameters and execute the statement
+        if ($stmt) {
+            $stmt->bind_param("ss", $adminEmail, $encryptedPassword);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows > 0) {
+                // Admin login successful, fetch user data
+                $admin = $result->fetch_assoc();
+
+                // Set session variables for the logged-in admin
+                $_SESSION['is_admin_login'] = true;
+                $_SESSION['adminLogEmail'] = $admin['a_Email']; // Store admin email in session
+                $_SESSION['adminName'] = $admin['a_Name']; // Store admin name for personalization
+
+                header("Location: adminDashboard.php");
+                exit();
+            } else {
+                $msg = '<div class="alert alert-danger">Invalid Email or Password.</div>';
+            }
         } else {
-            $msg = '<div class="alert alert-danger">Invalid Email or Password.</div>';
+            $msg = '<div class="alert alert-danger">Database error: Could not prepare statement.</div>';
         }
     }
 }
