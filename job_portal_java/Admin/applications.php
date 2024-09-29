@@ -83,9 +83,6 @@ require "../config.php";
 </div>
 </div> <!-- div Row close from header -->
 
-<div>
-    <a class="btn btn-danger box" href="./addApplications.php"><i class="fas fa-plus fa-2x"></i></a>
-</div>
 </div> <!-- div Container-fluid close from header -->
 <?php
 include('./adminInclude/footer.php');

@@ -107,7 +107,7 @@ if (isset($_REQUEST['jobUpdateBtn'])) {
     <div class="form-group">
       <label for="job_id">Job Detail ID</label>
       <input type="text" class="form-control" id="job_id" name="job_id" value="<?php if (isset($row['detail_id'])) {
-        echo $row['job_id'];
+        echo $row['detail_id'];
       } ?>" readonly>
     </div>
     <div class="form-group">
